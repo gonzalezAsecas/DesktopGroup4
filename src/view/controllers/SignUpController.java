@@ -5,7 +5,6 @@
  */
 package view.controllers;
 
-import view.controller.LogInController;
 import exceptions.EmailNotUniqueException;
 import exceptions.LoginExistingException;
 import java.io.IOException;

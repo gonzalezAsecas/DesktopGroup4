@@ -29,8 +29,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logic.Logic;
 import message.User;
-import view.controller.LogOutController;
-import view.controller.SignUpController;
 
 /**
  *Login FXML Controller class

@@ -20,7 +20,7 @@ import message.User;
 public class LogicImplementation implements Logic{
     
     private static final Logger LOG = 
-            Logger.getLogger(LogicDataTestImplementation.class.getName());
+            Logger.getLogger(LogicImplementation.class.getName());
     
     private ClientSocket client;
     
