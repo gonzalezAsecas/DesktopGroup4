@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.controllers;
+package project.view.controller;
 
 import exceptions.EmailNotUniqueException;
 import exceptions.LoginExistingException;
@@ -27,7 +27,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import logic.Logic;
+import project.logic.Logic;
+import message.Privilege;
+import message.Status;
 import message.User;
 
 /**
@@ -35,9 +37,7 @@ import message.User;
  * @author Gorka
  */
 public class SignUpController {
-    
-    private static final Logger LOG = Logger.getLogger("view.controller.LogOutController");
-    
+    private static final Logger LOG = Logger.getLogger("view.controller.SignUpController");
     @FXML
     private TextField txtFName;
     @FXML
@@ -72,8 +72,6 @@ public class SignUpController {
     private String errorMessage;
     
     private Logic logic;
-    
-    private Alert alert;
     
     private Stage stage;
     public Stage getStage(){
@@ -119,25 +117,39 @@ public class SignUpController {
      * @param newValue 
      */
      private void textChanged(ObservableValue observable, String oldValue,
-             String newValue) {
+            String newValue) {
          if(!txtFName.getText().trim().isEmpty() && !txtFEmail.getText().trim().isEmpty()
-                 && !txtFUser.getText().trim().isEmpty() && !pwPassword.getText().trim().isEmpty()
-                 && !pwRpPassword.getText().trim().isEmpty()){
-             btnSignUp.setDisable(false);
+                && !txtFUser.getText().trim().isEmpty() && !pwPassword.getText().trim().isEmpty()
+                && !pwRpPassword.getText().trim().isEmpty()){
+            btnSignUp.setDisable(false);
          }else {
-             btnSignUp.setDisable(true);
+            btnSignUp.setDisable(true);
          }
          
-         if(txtFUser.getLength() == 17){
-             txtFUser.setText(txtFUser.getText().substring(0,16));
+         if(txtFName.getLength() == 101){
+            txtFName.setText(txtFName.getText().substring(0,100));
+            new Alert(AlertType.INFORMATION,"Name too long",ButtonType.OK).show();
+         }
+         
+         
+         if(txtFEmail.getLength() == 51){
+            txtFEmail.setText(txtFEmail.getText().substring(0,50));
+            new Alert(AlertType.INFORMATION,"Email too long",ButtonType.OK).show();
+         }
+         
+         if(txtFUser.getLength() == 21){
+            txtFUser.setText(txtFUser.getText().substring(0,20));
+            new Alert(AlertType.INFORMATION,"User too long",ButtonType.OK).show();
          }
          
          if(pwPassword.getLength() == 17){
-             pwPassword.setText(pwPassword.getText().substring(0,16));
+            pwPassword.setText(pwPassword.getText().substring(0,16));
+            new Alert(AlertType.INFORMATION,"Password too long",ButtonType.OK).show();
          }
          
          if(pwRpPassword.getLength() == 17){
-             pwRpPassword.setText(pwRpPassword.getText().substring(0,16));
+            pwRpPassword.setText(pwRpPassword.getText().substring(0,16));
+            new Alert(AlertType.INFORMATION,"Password too long",ButtonType.OK).show();
          } 
      }
     
@@ -147,14 +159,9 @@ public class SignUpController {
      */
     private void pushSignUp(ActionEvent event){
         errorMessage = "";
-        boolean a = verifyEmail();
-        boolean b = verifyUser();
-        boolean c = verifyPassword();
-        if(a && b && c){
+        if(verifyEmail() && verifyUser() && verifyPassword()){
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            User user = new User();
-            user.setStatus("enabled");
-            user.setPrivilege("user");
+            User user = new User(Status.enabled, Privilege.user);
             user.setFullName(txtFName.getText());
             user.setLogin(txtFUser.getText());
             user.setEmail(txtFEmail.getText());
@@ -163,25 +170,23 @@ public class SignUpController {
             user.setLastPasswordChange(timestamp);
             try {
                 logic.signUpUser(user);
-                alert = new Alert(AlertType.CONFIRMATION,"Register confirmed",ButtonType.OK);
+                new Alert(AlertType.CONFIRMATION,"Register confirmed",ButtonType.OK).showAndWait();
                 openLogIn();
             } catch (LoginExistingException lee) {
                 LOG.log(Level.SEVERE, lee.getMESSAGE(), lee);
                 txtFUser.clear();
                 lblUser.setTextFill(Color.web("#FF0000"));
-                alert = new Alert(AlertType.ERROR,lee.getMESSAGE(), ButtonType.OK);
+                new Alert(AlertType.ERROR,lee.getMESSAGE(), ButtonType.OK).showAndWait();
             } catch (EmailNotUniqueException enue) {
                 LOG.log(Level.SEVERE, enue.getMESSAGE(), enue);
                 txtFEmail.clear();
                 lblEmail.setTextFill(Color.web("#FF0000"));
-                alert = new Alert(AlertType.ERROR,enue.getMESSAGE(), ButtonType.OK);
+                new Alert(AlertType.ERROR,enue.getMESSAGE(), ButtonType.OK).showAndWait();
             } catch (Exception ex) {
-                Logger.getLogger(SignUpController.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             }
-            alert.showAndWait();
         }else {
-            alert = new Alert(AlertType.ERROR,errorMessage,ButtonType.OK);
-            alert.showAndWait();
+            new Alert(AlertType.ERROR,errorMessage,ButtonType.OK).showAndWait();
         }
     }
     
@@ -227,7 +232,7 @@ public class SignUpController {
     private void openLogIn() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
-            "/view/xml/LogInXML.fxml"));
+            "/project/view/xml/LogInXML.fxml"));
             Parent root = (Parent)loader.load();
             Stage logInStage=new Stage();
             LogInController controller = ((LogInController)loader.getController());
@@ -237,8 +242,7 @@ public class SignUpController {
             stage.hide();
         }catch(IOException e){
             LOG.log(Level.SEVERE, e.getMessage(), e);
-            alert = new Alert(AlertType.ERROR,e.getMessage(),ButtonType.OK);
-            alert.showAndWait();
+            new Alert(AlertType.ERROR,e.getMessage(),ButtonType.OK).show();
         }
     }
     
@@ -263,7 +267,8 @@ public class SignUpController {
         }else {
             txtFEmail.clear();
             lblEmail.setTextFill(Color.web("#FF0000"));
-            errorMessage = "Email invalid";
+            errorMessage = "Your email have wrong format. Correct format is: "
+                    + "example@example.example";
             return false;
         }
     }
@@ -280,9 +285,9 @@ public class SignUpController {
             txtFUser.clear();
             lblUser.setTextFill(Color.web("#FF0000"));
             if(errorMessage.isEmpty()){
-                errorMessage = "Username invalid";
+                errorMessage = "Username too short";
             }else {
-                errorMessage = errorMessage + "\nUsername invalid";
+                errorMessage = errorMessage + "\nUsername too short";
             }
             return false;
         }
@@ -293,23 +298,37 @@ public class SignUpController {
      * @return boolean
      */
     private boolean verifyPassword() {
-        if(pwPassword.getText().equals(pwRpPassword.getText()) 
-                && pwPassword.getLength() >=4){
-            lblPassword.setTextFill(Color.web("#237bf7"));
-            lblRpPassword.setTextFill(Color.web("#237bf7"));
-            return true;
+        if(pwPassword.getLength() >=4){
+            if(pwPassword.getText().equals(pwRpPassword.getText())){
+                lblPassword.setTextFill(Color.web("#237bf7"));
+                lblRpPassword.setTextFill(Color.web("#237bf7"));
+                return true;
+            }else {
+                pwPassword.clear();
+                pwRpPassword.clear();
+                lblPassword.setTextFill(Color.web("#FF0000"));
+                lblRpPassword.setTextFill(Color.web("#FF0000"));
+                if(errorMessage.isEmpty()){
+                    errorMessage = "Password no coinciden";
+                }else {
+                    errorMessage = errorMessage + "\nPassword no coinciden";
+                }
+                return false;
+            }
         }else {
             pwPassword.clear();
             pwRpPassword.clear();
             lblPassword.setTextFill(Color.web("#FF0000"));
             lblRpPassword.setTextFill(Color.web("#FF0000"));
             if(errorMessage.isEmpty()){
-                errorMessage = "Password invalid";
+                errorMessage = "Password too shot";
             }else {
-                errorMessage = errorMessage + "\nPassword invalid";
+                errorMessage = errorMessage + "\nPassword too short";
             }
             return false;
         }
+        
+        
     }
     
     /**

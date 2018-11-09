@@ -1,7 +1,6 @@
-package view.controllers;
+package project.view.controller;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,7 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;    
-import logic.Logic;
+import project.logic.Logic;
 //---CAMBIAR----//
 import message.User;
 

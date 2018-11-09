@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.controllers;
+package project.view.controller;
 
 import exceptions.LoginNotExistingException;
 import exceptions.WrongPasswordException;
@@ -27,7 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import logic.Logic;
+import project.logic.Logic;
 import message.User;
 
 /**
@@ -172,7 +172,7 @@ public class LogInController{
     public void handleSignUp(ActionEvent event){
         //Create the loader for the signup xml
         FXMLLoader loader=new FXMLLoader(getClass()
-                .getResource("/view/xml/SignUpXML.fxml"));
+                .getResource("/project/view/xml/SignUpXML.fxml"));
         //Create the parent and load the tree
         Parent root;
         try {
@@ -192,11 +192,14 @@ public class LogInController{
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "An input-output error in the logOut loader.", 
                     ex);
+            Alert alert =new Alert(AlertType.ERROR, "An error have occurred.", 
+                    ButtonType.OK);
+            alert.showAndWait();
+            txtFUser.requestFocus();
         }catch (Exception ex){
             LOG.log(Level.SEVERE, "An generic error in the logOut loader.", 
                     ex);
-        }finally{
-            Alert alert =new Alert(AlertType.ERROR, "A error have occurred.", 
+            Alert alert =new Alert(AlertType.ERROR, "An error have occurred.", 
                     ButtonType.OK);
             alert.showAndWait();
             txtFUser.requestFocus();
@@ -225,7 +228,7 @@ public class LogInController{
             LOG.log(Level.SEVERE, e1.getMESSAGE(), e1);
             lblUser.setTextFill(Color.web("#ff0000"));
             lblPass.setTextFill(Color.web("#237bf7"));
-            Alert alert = new Alert(AlertType.ERROR,"The user not exist.", 
+            Alert alert = new Alert(AlertType.ERROR,"The user doesn't exist.", 
                     ButtonType.OK);
             //Show the alert
             alert.showAndWait();
@@ -244,10 +247,8 @@ public class LogInController{
             lblUser.setTextFill(Color.web("#237bf7"));
             lblPass.setTextFill(Color.web("#237bf7"));
             Alert alert = new Alert(AlertType.ERROR,
-                    "A error with the program have ocurred.", ButtonType.OK);
+                    "An error with the program have ocurred.", ButtonType.OK);
             alert.showAndWait();
-        }finally{
-            txtFUser.requestFocus();
         }
     }
     
@@ -258,7 +259,7 @@ public class LogInController{
     public void logOut(User user){
         //Create the loader for the xml
         FXMLLoader loader=new FXMLLoader(getClass()
-                .getResource("/view/xml/LogOutXML.fxml"));
+                .getResource("/project/view/xml/LogOutXML.fxml"));
         //Create the parent and load the tree
         Parent root;
         try{

@@ -3,16 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logic;
+package project.logic;
 
 import exceptions.EmailNotUniqueException;
 import exceptions.LoginExistingException;
 import exceptions.LoginNotExistingException;
 import exceptions.WrongPasswordException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import message.Message;
@@ -26,8 +30,8 @@ public class ClientSocket {
     
     private final static Logger LOG = Logger.getLogger("serverLogger");
     
-    private final int PORT = 6000;
-    private final String IP = "macinf04.tartangalh.eus";
+    private final static int PORT = 6000;
+    private String ip;
     
     /**
      * Method that sends a message(user+numeric_identifier) and receives another
@@ -40,11 +44,12 @@ public class ClientSocket {
      */
     public void signUp(User user) throws LoginExistingException, 
             EmailNotUniqueException, Exception{
+        config();
         Socket client = null;
         ObjectOutputStream output = null;
         ObjectInputStream input = null;
         try{
-            client = new Socket(IP, PORT);
+            client = new Socket(ip, PORT);
             output = new ObjectOutputStream(client.getOutputStream());
             input = new ObjectInputStream(client.getInputStream());
             
@@ -91,12 +96,13 @@ public class ClientSocket {
      */
     public User logIn(User user) throws LoginNotExistingException, 
             WrongPasswordException, Exception{
+        config();
         Socket client = null;
         ObjectOutputStream output = null;
         ObjectInputStream input = null;
         Message in = new Message();
         try{
-            client = new Socket(IP, PORT);
+            client = new Socket(ip, PORT);
             output = new ObjectOutputStream(client.getOutputStream());
             input = new ObjectInputStream(client.getInputStream());
             
@@ -115,8 +121,6 @@ public class ClientSocket {
                 case -1:
                     throw new Exception();
             }
-        }catch(Exception e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
         }finally {
             try {
                 if(client != null)
@@ -130,6 +134,18 @@ public class ClientSocket {
            }
         }
         return (User) in.getData();
+    }
+
+    private void config() throws IOException {
+        Properties prop= new Properties();
+        try{
+        FileInputStream fis= new FileInputStream("parameters.properties");
+        prop.load(fis);
+        }catch(FileNotFoundException e){
+            LOG.log(Level.SEVERE, e.getMessage(), e);
+        }
+        
+        ip=prop.getProperty("servername");
     }
 
 }

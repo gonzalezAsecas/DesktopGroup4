@@ -12,7 +12,7 @@
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" 
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" 
             xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="view.controller.LogInController">
+            fx:controller="project.view.controller.LogInController">
    <children>
       <Label fx:id="lblUser" layoutX="437.0" layoutY="167.0" text="User" 
              textFill="#237bf7">

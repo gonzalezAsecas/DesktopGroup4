@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package project.view;
 
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import logic.Logic;
-import logic.LogicFactory;
-import view.controllers.LogInController;
+import project.logic.Logic;
+import project.logic.LogicFactory;
+import project.view.controller.LogInController;
 
 /**
  *
@@ -33,7 +33,7 @@ public class Application extends javafx.application.Application{
     @Override
     public void start(Stage stage) throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
-        "/view/xml/LogInXML.fxml"));
+        "/project/view/xml/LogInXML.fxml"));
         Parent root = (Parent)loader.load();
         LogInController controller = loader.getController();
         controller.setStage(stage);
