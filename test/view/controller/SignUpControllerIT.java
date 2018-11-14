@@ -6,6 +6,7 @@
 package view.controller;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -14,13 +15,14 @@ import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
+import static org.testfx.matcher.base.NodeMatchers.isInvisible;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import project.view.Application;
 
 /**
  *
  * @author Gorka Redondo and Lander LLuvia
  */
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SignUpControllerIT extends ApplicationTest{
     //private static final Logger LOG = Logger.getLogger("view.controller.SignUpControllerIT");
@@ -43,6 +45,10 @@ public class SignUpControllerIT extends ApplicationTest{
         verifyThat("#btnCancel", isEnabled());
     }
     
+    /**
+     * Tests if the signup button is still disabled after writing in the
+     * fields one by one.
+     */
     @Test
     public void test2_handleTextChanged(){
         clickOn("#txtFName");
@@ -66,6 +72,9 @@ public class SignUpControllerIT extends ApplicationTest{
         verifyThat("#btnSignUp", isDisabled());
     }
     
+   /**
+     * Tests if the signup button enables after filling all the fields
+     */
     @Test
     public void test3_handleAllFields(){
         clickOn("#txtFName");
@@ -85,6 +94,9 @@ public class SignUpControllerIT extends ApplicationTest{
         verifyThat("#btnSignUp", isEnabled());
     }
     
+    /**
+     * Tests the maximum and minimum size of all the fields.
+     */
     @Test
     public void test4_handleFieldsSize(){
         //too long
@@ -113,70 +125,141 @@ public class SignUpControllerIT extends ApplicationTest{
             write("a");
         }
         push(KeyCode.ENTER);
-        //too short
-        clickOn("#txtFUser");
-        eraseText(20);
+        
+        //too short - user
+        doubleClickOn("#txtFEmail");
+        write("@.");
+        doubleClickOn("#txtFUser");
+        write("a");
         clickOn("#btnSignUp");
+        push(KeyCode.ENTER);
+        clickOn("#txtFUser");
+        write("LanderGorka");
+        // password and repeat password
+        clickOn("#pwPassword");
+        eraseText(15);
+        clickOn("#btnSignUp");
+        push(KeyCode.ENTER);
+        /*clickOn("#pwPassword");
+        write("1234");
+        clickOn("#pwRpPassword");
+        write("1234");
+        clickOn("#btnSignUp");
+        push(KeyCode.ENTER);*/
     }
     
+    /**
+     * Checks the restrictions of the email field
+     */
     @Test
     public void test5_handleEmailRestriction(){
         clickOn("#txtFName");
         write("Lander Lluvia");
         clickOn("#txtFUser");
-        write("landerlluv");
+        write("lander");
         clickOn("#pwPassword");
-        write("landerlluv");
+        write("1234");
         clickOn("#pwRpPassword");
-        write("landerlluv");
+        write("1234");
         
         clickOn("#txtFEmail");
         write("lander");
         clickOn("#btnSignUp");
         push(KeyCode.ENTER);
         clickOn("#txtFEmail");
-        write("@gmail");
+        write("lander@gmail");
         clickOn("#btnSignUp");
         push(KeyCode.ENTER);
         clickOn("#txtFEmail");
-        write(".");
+        write("gmail.com");
         clickOn("#btnSignUp");
         push(KeyCode.ENTER);
-        clickOn("#txtFEmail");
-        write("com");
+        /*clickOn("#txtFEmail");
+        write("lander@gmail.com");
         clickOn("#btnSignUp");
+        push(KeyCode.ENTER);*/
     }
     
+    /**
+     * Checks if the password and repeat password fields aren't equals and if 
+     * they are equals.
+     */
     @Test
     public void test6_handlePasswordRestriction(){
         clickOn("#txtFName");
         write("Lander Lluvia");
-        clickOn("#txtFUser");
-        write("landerlluv");
-        clickOn("#pwRpPassword");
-        write("landerlluv");
         clickOn("#txtFEmail");
+        write("lander@gmail.com");
+        clickOn("#txtFUser");
         write("lander");
         
+        
         clickOn("#pwPassword");
-        write("lan");
+        write("derlluv");
         clickOn("#pwRpPassword");
-        write("lan");
+        write("derllug");
         clickOn("#btnSignUp");
         push(KeyCode.ENTER);
+        /*clickOn("#pwPassword");
+        write("derlluv");
+        clickOn("#pwRpPassword");
+        write("derlluv");
+        clickOn("#btnSignUp");
+        push(KeyCode.ENTER);*/
+    }
+   /**
+     * Checks if the show password, repeat password and cancel 
+     * buttons work properly.
+     */
+    @Test
+    public void test7_showPasswordAndCancel(){
         clickOn("#pwPassword");
-        write("aaaaaaaaaaaaaa");
-        push(KeyCode.ENTER);
+        write("hola");
+        moveTo("#btnPassShow");
+        press(MouseButton.PRIMARY);
+        verifyThat("#txtFPassword", isVisible());
+        verifyThat("#pwPassword", isInvisible());
+        release(MouseButton.PRIMARY);
         clickOn("#pwRpPassword");
-        write("aa");
+        write("hola");
+        moveTo("#btnRpPassShow");
+        press(MouseButton.PRIMARY);
+        verifyThat("#txtFRpPassword", isVisible());
+        verifyThat("#pwRpPassword", isInvisible());
+        release(MouseButton.PRIMARY);
+        clickOn("#btnCancel");
+    }
+    
+    /**
+     * Checks if the user or email fields exist in the database or not.
+     */
+    @Test
+    public void test8_UserOrEmailExist(){
+        //User exist
+        clickOn("#txtFName");
+        write("Lander Lluvia");
+        clickOn("#txtFEmail");
+        write("gorka@gmail.com");
+        clickOn("#txtFUser");
+        write("lander");
+        clickOn("#pwPassword");
+        write("derlluv");
+        clickOn("#pwRpPassword");
+        write("derlluv");
         clickOn("#btnSignUp");
         push(KeyCode.ENTER);
-        clickOn("#pwRpPassword");
-        write("aaaaaaaaaaaa");
+        //Email exist
+        doubleClickOn("#txtFEmail");
+        write("lander@gmail.com");
+        clickOn("#txtFUser");
+        write("gorka");
         clickOn("#btnSignUp");
-        
-        
-        
-        
+        push(KeyCode.ENTER);
+        //All correct
+        clickOn("#txtFEmail");
+        write("gorka@gmail.com");
+        clickOn("#btnSignUp");
+        push(KeyCode.ENTER);
     }
 }
+
