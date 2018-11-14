@@ -30,7 +30,7 @@ public class ClientSocket {
     
     private final static Logger LOG = Logger.getLogger("serverLogger");
     
-    private final static int PORT = 6000;
+    private int port;
     private String ip;
     
     /**
@@ -49,7 +49,7 @@ public class ClientSocket {
         ObjectOutputStream output = null;
         ObjectInputStream input = null;
         try{
-            client = new Socket(ip, PORT);
+            client = new Socket(ip, port);
             output = new ObjectOutputStream(client.getOutputStream());
             input = new ObjectInputStream(client.getInputStream());
             
@@ -79,7 +79,7 @@ public class ClientSocket {
                 if (output != null)
                     output.close();
             }catch (IOException e) {
-                //LOG.severe("An IOException in ClientSocket signUp() has happened");
+                LOG.severe("An IOException in ClientSocket signUp() has happened");
             }
         }
     }       
@@ -102,7 +102,7 @@ public class ClientSocket {
         ObjectInputStream input = null;
         Message in = new Message();
         try{
-            client = new Socket(ip, PORT);
+            client = new Socket(ip, port);
             output = new ObjectOutputStream(client.getOutputStream());
             input = new ObjectInputStream(client.getInputStream());
             
@@ -137,15 +137,18 @@ public class ClientSocket {
     }
 
     private void config() throws IOException {
+        ResourceBundle urlFich= ResourceBundle.getBundle("project.logic.parameters");
+        ip=urlFich.getString("servername");
+        port=Integer.parseInt(urlFich.getString("port"));
+        /*
         Properties prop= new Properties();
         try{
-        FileInputStream fis= new FileInputStream("parameters.properties");
+        FileInputStream fis= new FileInputStream("src/project/logic/parameters.properties");
         prop.load(fis);
         }catch(FileNotFoundException e){
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
-        
-        ip=prop.getProperty("servername");
+        ip=prop.getProperty("servername");*/
     }
 
 }

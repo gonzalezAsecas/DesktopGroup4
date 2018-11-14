@@ -1,6 +1,7 @@
 package project.view.controller;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;    
+import javafx.stage.WindowEvent;
 import project.logic.Logic;
 //---CAMBIAR----//
 import message.User;
@@ -22,6 +24,9 @@ import message.User;
  * @author Ion Mikel
  */
 public class LogOutController {
+    
+    private static final Logger LOG = 
+            Logger.getLogger("view.controller.LogOutController");
     
     @FXML 
     private Button btnLogOut;
@@ -68,9 +73,23 @@ public class LogOutController {
         stage.setScene(scene);
         stage.setTitle("LogOut");
         stage.setResizable(false);
+        //Set window's event handlers
+        stage.setOnShowing(this::handleWindowShowing);
         btnLogOut.setOnAction(this::pushLogOut);
         lblMessage.setText("Welcome " + user.getLogin());
         stage.show();
+    }
+    
+    /**
+     * 
+     * @param event 
+     */
+    public void handleWindowShowing(WindowEvent event){
+        LOG.info("Beginning handleWindowShowing");
+        //Set the mnemonic parse
+        btnLogOut.setMnemonicParsing(true);
+        //Set the mnemonic character and the text
+        btnLogOut.setText("_LogOut");
     }
     
     /**

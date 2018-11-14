@@ -27,6 +27,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import project.logic.Logic;
 import message.Privilege;
 import message.Status;
@@ -37,7 +38,9 @@ import message.User;
  * @author Gorka
  */
 public class SignUpController {
+    
     private static final Logger LOG = Logger.getLogger("view.controller.SignUpController");
+    
     @FXML
     private TextField txtFName;
     @FXML
@@ -93,6 +96,8 @@ public class SignUpController {
         //Set window properties
         stage.setTitle("Sign up");
         stage.setResizable(false);
+        //Set window's event handlers
+        stage.setOnShowing(this::handleWindowShowing);
         //Set control events
         btnSignUp.setOnAction(this::pushSignUp);
         btnPassShow.setOnMousePressed(this::pressPassShow);
@@ -107,6 +112,20 @@ public class SignUpController {
         pwRpPassword.textProperty().addListener(this::textChanged);
         //Show window
         stage.show();
+    }
+    
+    /**
+     * 
+     * @param event 
+     */
+    public void handleWindowShowing(WindowEvent event){
+        LOG.info("Beginning handleWindowShowing");
+        //Set the mnemonic parse
+        btnSignUp.setMnemonicParsing(true);
+        btnCancel.setMnemonicParsing(true);
+        //Set the mnemonic character and the text
+        btnSignUp.setText("_SignUp");
+        btnCancel.setText("_Cancel");
     }
     
     /**
@@ -174,12 +193,10 @@ public class SignUpController {
                 openLogIn();
             } catch (LoginExistingException lee) {
                 LOG.log(Level.SEVERE, lee.getMESSAGE(), lee);
-                txtFUser.clear();
                 lblUser.setTextFill(Color.web("#FF0000"));
                 new Alert(AlertType.ERROR,lee.getMESSAGE(), ButtonType.OK).showAndWait();
             } catch (EmailNotUniqueException enue) {
                 LOG.log(Level.SEVERE, enue.getMESSAGE(), enue);
-                txtFEmail.clear();
                 lblEmail.setTextFill(Color.web("#FF0000"));
                 new Alert(AlertType.ERROR,enue.getMESSAGE(), ButtonType.OK).showAndWait();
             } catch (Exception ex) {
@@ -265,7 +282,6 @@ public class SignUpController {
             lblEmail.setTextFill(Color.web("#237bf7"));
             return true;
         }else {
-            txtFEmail.clear();
             lblEmail.setTextFill(Color.web("#FF0000"));
             errorMessage = "Your email have wrong format. Correct format is: "
                     + "example@example.example";
@@ -282,7 +298,6 @@ public class SignUpController {
             lblUser.setTextFill(Color.web("#237bf7"));
             return true;
         }else {
-            txtFUser.clear();
             lblUser.setTextFill(Color.web("#FF0000"));
             if(errorMessage.isEmpty()){
                 errorMessage = "Username too short";
@@ -304,8 +319,6 @@ public class SignUpController {
                 lblRpPassword.setTextFill(Color.web("#237bf7"));
                 return true;
             }else {
-                pwPassword.clear();
-                pwRpPassword.clear();
                 lblPassword.setTextFill(Color.web("#FF0000"));
                 lblRpPassword.setTextFill(Color.web("#FF0000"));
                 if(errorMessage.isEmpty()){

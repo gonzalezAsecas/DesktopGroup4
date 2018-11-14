@@ -5,6 +5,7 @@
  */
 package project.view.controller;
 
+import com.sun.javafx.scene.control.behavior.TextBinding;
 import exceptions.LoginNotExistingException;
 import exceptions.WrongPasswordException;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -110,10 +112,12 @@ public class LogInController{
      */
     public void handleWindowShowing(WindowEvent event){
         LOG.info("Beginning handleWindowShowing");
-        //Set the mnemonic parse to the login button
+        //Set the mnemonic parse
         btnLogIn.setMnemonicParsing(true);
+        hlRegister.setMnemonicParsing(true);
         //Set the mnemonic character and the text
         btnLogIn.setText("_Login");
+        hlRegister.setText("_Registrer");
     }
     
     /**
@@ -228,6 +232,7 @@ public class LogInController{
             LOG.log(Level.SEVERE, e1.getMESSAGE(), e1);
             lblUser.setTextFill(Color.web("#ff0000"));
             lblPass.setTextFill(Color.web("#237bf7"));
+            txtFUser.requestFocus();
             Alert alert = new Alert(AlertType.ERROR,"The user doesn't exist.", 
                     ButtonType.OK);
             //Show the alert
@@ -237,6 +242,7 @@ public class LogInController{
             LOG.log(Level.SEVERE, e2.getMESSAGE(), e2);
             lblUser.setTextFill(Color.web("#237bf7"));
             lblPass.setTextFill(Color.web("#ff0000"));
+            pwPassword.requestFocus();
             Alert alert = new Alert(AlertType.ERROR,"The password is wrong.", 
                     ButtonType.OK);
             //Show the alert
