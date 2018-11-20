@@ -23,6 +23,7 @@ import project.view.Application;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LogInControllerIT extends ApplicationTest{
+    
     /**
      *
      * @param stage
@@ -33,22 +34,23 @@ public class LogInControllerIT extends ApplicationTest{
         new Application().start(stage);
     }
     
-    /**
-     * 
-     */
-    
     @Test
     public void test1_initStage(){
         verifyThat("#btnLogIn", isDisabled());
         verifyThat("#hlRegister",isEnabled());
     }
     
-    /**
-     * 
-     */
+    @Test
+    public void test2_handleSignUp(){
+        clickOn("#hlRegister");
+        verifyThat("#btnCancel", isEnabled());
+        sleep(500);
+        clickOn("#btnCancel");
+    }
     
     @Test
-    public void test2_handleTextChanged(){
+    public void test3_handleTextChanged(){
+        verifyThat("#btnLogIn", isDisabled());
         clickOn("#txtFUser");
         write("txikle");
         verifyThat("#btnLogIn", isDisabled());
@@ -68,39 +70,47 @@ public class LogInControllerIT extends ApplicationTest{
         eraseText(4);
         clickOn("#txtFUser");
         write("txikletxikletxikletxi");
+        sleep(500);
         push(KeyCode.ENTER);
         eraseText(20);
         clickOn("#pwPassword");
         write("12345678901234567");
+        sleep(500);
         push(KeyCode.ENTER);
-    }
-    @Test
-    public void test3_handleSignUp(){
-        clickOn("#hlRegister");
-        clickOn("#btnCancel");
     }
     
     @Test
-    public void test4_logOut(){
+    public void test4_logInUsernameNonExistent(){
         clickOn("#txtFUser");
         write("txiklee");
         clickOn("#pwPassword");
         write("1234");
         clickOn("#btnLogIn");
+        sleep(500);
         push(KeyCode.ENTER);
+    }
+    
+    @Test
+    public void test5_logInPasswordWrong(){
         clickOn("#txtFUser");
-        eraseText(1);
+        write("txikle");
         clickOn("#pwPassword");
-        write("5");
+        write("12345");
         clickOn("#btnLogIn");
+        sleep(500);
         push(KeyCode.ENTER);
+    }
+    
+    @Test
+    public void test6_successfulLogIn(){
+        clickOn("#txtFUser");
+        write("txikle");
         clickOn("#pwPassword");
-        eraseText(1);
+        write("1234");
         clickOn("#btnLogIn");
         verifyThat("#btnLogOut", isEnabled());
         clickOn("#btnLogOut");
+        sleep(500);
         push(KeyCode.ENTER);
     }
-
-    
 }

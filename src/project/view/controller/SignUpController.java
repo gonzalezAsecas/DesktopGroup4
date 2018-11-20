@@ -244,7 +244,6 @@ public class SignUpController {
     }
     /**
      * Method to open LogIn window and close SignUp
-     * @return boolean
      */
     private void openLogIn() {
         try{

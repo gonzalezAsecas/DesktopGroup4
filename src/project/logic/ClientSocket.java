@@ -9,15 +9,11 @@ import exceptions.EmailNotUniqueException;
 import exceptions.LoginExistingException;
 import exceptions.LoginNotExistingException;
 import exceptions.WrongPasswordException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import message.Message;
 import message.User;
@@ -67,7 +63,7 @@ public class ClientSocket {
                     throw new LoginExistingException();
                 case 22:
                     throw new EmailNotUniqueException();
-                case -2:
+                case 0:
                     throw new Exception();
             }
         }finally {
@@ -118,7 +114,7 @@ public class ClientSocket {
                     throw new LoginNotExistingException();
                 case 12:
                     throw new WrongPasswordException();
-                case -1:
+                case 0:
                     throw new Exception();
             }
         }finally {
