@@ -11,11 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" 
-      minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" 
-      prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" 
-      xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="project.view.controller.SignUpController">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.controller.SignUpController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
@@ -94,7 +90,7 @@
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnCancel" layoutX="300.0" layoutY="13.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="74.0" text="Cancel">
+                  <Button fx:id="btnCancel" layoutX="300.0" layoutY="13.0" mnemonicParsing="false" text="Cancel">
                      <font>
                         <Font size="16.0" />
                      </font>
