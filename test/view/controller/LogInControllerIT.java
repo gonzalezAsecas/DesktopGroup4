@@ -8,6 +8,7 @@ package view.controller;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -34,22 +35,16 @@ public class LogInControllerIT extends ApplicationTest{
         new Application().start(stage);
     }
     
+    @Ignore
     @Test
     public void test1_initStage(){
         verifyThat("#btnLogIn", isDisabled());
         verifyThat("#hlRegister",isEnabled());
     }
     
+    @Ignore
     @Test
-    public void test2_handleSignUp(){
-        clickOn("#hlRegister");
-        verifyThat("#btnCancel", isEnabled());
-        sleep(500);
-        clickOn("#btnCancel");
-    }
-    
-    @Test
-    public void test3_handleTextChanged(){
+    public void test2_handleTextChanged(){
         verifyThat("#btnLogIn", isDisabled());
         clickOn("#txtFUser");
         write("txikle");
@@ -79,28 +74,38 @@ public class LogInControllerIT extends ApplicationTest{
         push(KeyCode.ENTER);
     }
     
+    @Ignore
     @Test
-    public void test4_logInUsernameNonExistent(){
+    public void test3_logInUsernameNonExistent(){
         clickOn("#txtFUser");
         write("txiklee");
         clickOn("#pwPassword");
         write("1234");
         clickOn("#btnLogIn");
-        sleep(500);
         push(KeyCode.ENTER);
     }
     
+    @Ignore
     @Test
-    public void test5_logInPasswordWrong(){
+    public void test4_logInPasswordWrong(){
         clickOn("#txtFUser");
         write("txikle");
         clickOn("#pwPassword");
         write("12345");
         clickOn("#btnLogIn");
-        sleep(500);
         push(KeyCode.ENTER);
     }
     
+    @Ignore
+    @Test
+    public void test5_handleSignUp(){
+        clickOn("#hlRegister");
+        verifyThat("#btnCancel", isEnabled());
+        sleep(500);
+        clickOn("#btnCancel");
+    }
+    
+    @Ignore
     @Test
     public void test6_successfulLogIn(){
         clickOn("#txtFUser");
@@ -110,7 +115,5 @@ public class LogInControllerIT extends ApplicationTest{
         clickOn("#btnLogIn");
         verifyThat("#btnLogOut", isEnabled());
         clickOn("#btnLogOut");
-        sleep(500);
-        push(KeyCode.ENTER);
     }
 }

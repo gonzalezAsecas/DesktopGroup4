@@ -39,31 +39,62 @@ import message.User;
  *@version 1.0
  */
 public class LogInController{
-
+    /**
+     * The label of the username
+     */
     @FXML
     private Label lblUser;
+    
+    /**
+     * The label of the password
+     */
     @FXML
     private Label lblPass;
+    
+    /**
+     * The textfield for the username
+     */
     @FXML
     private TextField txtFUser;
+    
+    /**
+     * The textfield for the password
+     */
     @FXML
     private PasswordField pwPassword;
+    
+    /**
+     * The button for the login
+     */
     @FXML
     private Button btnLogIn;
+    
+    /**
+     * The hiperlink for the signup
+     */
     @FXML
     private Hyperlink hlRegister;
     
-    /* 
+    /**
      * This  is the logger that it go to save information about the desktop
      * application
      */
     private static final Logger LOG = 
             Logger.getLogger("view.controller.LogInController");
     
+    /**
+     * The stage of the login window
+     */
     private Stage stage;
     
+    /**
+     * The user for send to the logout window
+     */
     private User user;
     
+    /**
+     * The logic interface of the application
+     */
     private Logic logic;
     
     /**
@@ -119,7 +150,7 @@ public class LogInController{
         hlRegister.setMnemonicParsing(true);
         //Set the mnemonic character and the text
         btnLogIn.setText("_Login");
-        hlRegister.setText("_Registrer");
+        hlRegister.setText("_SignUp");
         stage.addEventHandler(KeyEvent.KEY_PRESSED, ev ->{
             if(ev.getCode()==KeyCode.ENTER){
                 logIn();
@@ -230,6 +261,7 @@ public class LogInController{
             //information and receive the user that it's login, 
             //with all infomation
             user = logic.loginUser(us);
+            LOG.info("Correct login make it.");
             //if all in the login have gone right, go to the logOut method 
             logOut(user);
         //Run when the login isn't in the database
@@ -244,7 +276,7 @@ public class LogInController{
             alert.showAndWait();
         //Run when the login is correct but the password no
         }catch(WrongPasswordException e2){
-            LOG.log(Level.SEVERE, e2.getCause().getLocalizedMessage());
+            LOG.log(Level.SEVERE, e2.getMESSAGE());
             lblUser.setTextFill(Color.web("#237bf7"));
             lblPass.setTextFill(Color.web("#ff0000"));
             pwPassword.requestFocus();
@@ -254,7 +286,7 @@ public class LogInController{
             alert.showAndWait();
         //The generic exception
         }catch(Exception e3){
-            LOG.log(Level.SEVERE, e3.getCause().getLocalizedMessage());
+            LOG.log(Level.SEVERE, e3.getMessage());
             lblUser.setTextFill(Color.web("#237bf7"));
             lblPass.setTextFill(Color.web("#237bf7"));
             Alert alert = new Alert(AlertType.ERROR,
@@ -290,13 +322,13 @@ public class LogInController{
             //Hide this stage
             stage.hide();
         }catch(IOException ex){
-            LOG.log(Level.SEVERE, ex.getCause().getLocalizedMessage());
+            LOG.log(Level.SEVERE, ex.getMessage());
             Alert alert= new Alert(AlertType.ERROR, "A error have ocurred in the login.", 
                     ButtonType.OK);
             alert.showAndWait();
             txtFUser.requestFocus();
         }catch(Exception ex){
-            LOG.log(Level.SEVERE, ex.getCause().getLocalizedMessage());
+            LOG.log(Level.SEVERE, ex.getMessage());
             Alert alert= new Alert(AlertType.ERROR, "A error have ocurred in the login.", 
                     ButtonType.OK);
             alert.showAndWait();
