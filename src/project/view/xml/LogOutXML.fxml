@@ -38,51 +38,6 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            
-            <Label fx:id="lblEmail" textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-            <Label fx:id="lblFullname" textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-            <Label fx:id="lblStatus" textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-              
-            <Label fx:id="lblPrivilege"  textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-            <Label fx:id="lblPassword"  textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-            <Label fx:id="lblLastAccess"  textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-            <Label fx:id="lblPasswordChange"  textFill="#237bf7">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            
-            
          </children>
       </HBox>
    </children>
