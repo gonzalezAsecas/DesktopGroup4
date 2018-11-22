@@ -5,7 +5,6 @@
  */
 package project.view.controller;
 
-import com.sun.javafx.scene.control.behavior.TextBinding;
 import exceptions.LoginNotExistingException;
 import exceptions.WrongPasswordException;
 import java.io.IOException;
@@ -26,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -33,41 +33,73 @@ import project.logic.Logic;
 import message.User;
 
 /**
- *Login FXML Controller class
+ *Login FXML Controller class, in this window you can connect to the main 
+ *application or go to the sign up window. Tha application begin in this window.
  *@author Jon Gonzalez
  *@version 1.0
  */
 public class LogInController{
-
+    /**
+     * The label of the username
+     */
     @FXML
     private Label lblUser;
+    
+    /**
+     * The label of the password
+     */
     @FXML
     private Label lblPass;
+    
+    /**
+     * The textfield for the username
+     */
     @FXML
     private TextField txtFUser;
+    
+    /**
+     * The textfield for the password
+     */
     @FXML
     private PasswordField pwPassword;
+    
+    /**
+     * The button for the login
+     */
     @FXML
     private Button btnLogIn;
+    
+    /**
+     * The hiperlink for the signup
+     */
     @FXML
     private Hyperlink hlRegister;
     
-    /* 
+    /**
      * This  is the logger that it go to save information about the desktop
      * application
      */
     private static final Logger LOG = 
             Logger.getLogger("view.controller.LogInController");
     
+    /**
+     * The stage of the login window
+     */
     private Stage stage;
     
+    /**
+     * The user for send to the logout window
+     */
     private User user;
     
+    /**
+     * The logic interface of the application
+     */
     private Logic logic;
     
     /**
      * Set the logic for communication with the next layer
-     * @param logic 
+     * @param logic this is the logic interface of the application
      */
     public void setLogic(Logic logic){
         this.logic=logic;
@@ -75,7 +107,7 @@ public class LogInController{
     
     /**
      * Set stage for the login 
-     * @param stage 
+     * @param stage the stage for this window
      */
     public void setStage(Stage stage){
         this.stage=stage;
@@ -83,7 +115,8 @@ public class LogInController{
     
     /**
      * Set and initialize the stage and its properties.
-     * @param root 
+     * @param root the parent for the window made by the application class
+     * with the corresponding XML
      */
     public void initStage(Parent root){
         LOG.info("Initializing Login stage");
@@ -108,24 +141,29 @@ public class LogInController{
     
     /**
      * Set atributes to the controls that it need in the window showing event
-     * @param event
+     * @param event the even that have ocurred
      */
-    public void handleWindowShowing(WindowEvent event){
-        LOG.info("Beginning handleWindowShowing");
+    private void handleWindowShowing(WindowEvent event){
+        LOG.info("On Window Showing");
         //Set the mnemonic parse
         btnLogIn.setMnemonicParsing(true);
         hlRegister.setMnemonicParsing(true);
         //Set the mnemonic character and the text
         btnLogIn.setText("_Login");
-        hlRegister.setText("_Registrer");
+        hlRegister.setText("_SignUp");
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, ev ->{
+            if(ev.getCode()==KeyCode.ENTER){
+                logIn();
+            }
+        });
     }
     
     /**
      * Go to login method
-     * @param event 
+     * @param event the even that have ocurred
      */
-    public void handleClick(ActionEvent event){
-            logIn();
+    private void handleClick(ActionEvent event){
+        logIn();
     }
     
     /**
@@ -133,13 +171,12 @@ public class LogInController{
      * method. If there are any field empty, disable the login button, else 
      * enable it. Also verify that the person who is writting don't write 
      * more than the maximum of characters.
-     * @param observable
-     * @param oldvalue
-     * @param newvalue 
+     * @param observable the entity that catch the value for observe it
+     * @param oldvalue the old value that has the control
+     * @param newvalue the new value of the control
      */
-    public void handleTextChanged(ObservableValue observable, 
+    private void handleTextChanged(ObservableValue observable, 
             String oldvalue, String newvalue){
-        LOG.info("Beginning handleTextChanged, the event when the text change.");
         //The verification of the emptiness of the fields
         if(txtFUser.getText().trim().isEmpty() || 
                 pwPassword.getText().trim().isEmpty()){
@@ -171,9 +208,10 @@ public class LogInController{
     
     /**
      * Load the signUp xml and pass the control to it controller
-     * @param event 
+     * @param event the even that have ocurred
      */
-    public void handleSignUp(ActionEvent event){
+    private void handleSignUp(ActionEvent event){
+        LOG.info("On Signup event");
         //Create the loader for the signup xml
         FXMLLoader loader=new FXMLLoader(getClass()
                 .getResource("/project/view/xml/SignUpXML.fxml"));
@@ -194,15 +232,13 @@ public class LogInController{
             //Hide this stage
             stage.hide();
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "An input-output error in the logOut loader.", 
-                    ex);
+            LOG.log(Level.SEVERE, ex.getCause().getLocalizedMessage());
             Alert alert =new Alert(AlertType.ERROR, "An error have occurred.", 
                     ButtonType.OK);
             alert.showAndWait();
             txtFUser.requestFocus();
         }catch (Exception ex){
-            LOG.log(Level.SEVERE, "An generic error in the logOut loader.", 
-                    ex);
+            LOG.log(Level.SEVERE, ex.getCause().getLocalizedMessage());
             Alert alert =new Alert(AlertType.ERROR, "An error have occurred.", 
                     ButtonType.OK);
             alert.showAndWait();
@@ -225,11 +261,12 @@ public class LogInController{
             //information and receive the user that it's login, 
             //with all infomation
             user = logic.loginUser(us);
+            LOG.info("Correct login make it.");
             //if all in the login have gone right, go to the logOut method 
             logOut(user);
         //Run when the login isn't in the database
         }catch(LoginNotExistingException e1){
-            LOG.log(Level.SEVERE, e1.getMESSAGE(), e1);
+            LOG.log(Level.SEVERE, e1.getMESSAGE());
             lblUser.setTextFill(Color.web("#ff0000"));
             lblPass.setTextFill(Color.web("#237bf7"));
             txtFUser.requestFocus();
@@ -239,7 +276,7 @@ public class LogInController{
             alert.showAndWait();
         //Run when the login is correct but the password no
         }catch(WrongPasswordException e2){
-            LOG.log(Level.SEVERE, e2.getMESSAGE(), e2);
+            LOG.log(Level.SEVERE, e2.getMESSAGE());
             lblUser.setTextFill(Color.web("#237bf7"));
             lblPass.setTextFill(Color.web("#ff0000"));
             pwPassword.requestFocus();
@@ -249,18 +286,18 @@ public class LogInController{
             alert.showAndWait();
         //The generic exception
         }catch(Exception e3){
-            LOG.log(Level.SEVERE, e3.getMessage(), e3);
+            LOG.log(Level.SEVERE, e3.getMessage());
             lblUser.setTextFill(Color.web("#237bf7"));
             lblPass.setTextFill(Color.web("#237bf7"));
             Alert alert = new Alert(AlertType.ERROR,
-                    "An error with the program have ocurred.", ButtonType.OK);
+                    e3.getMessage(), ButtonType.OK);
             alert.showAndWait();
         }
     }
     
     /**
      * Load the logOut xml and pass the control to it controller 
-     * @param user 
+     * @param user the user that we are manipulating
      */
     public void logOut(User user){
         //Create the loader for the xml
@@ -285,15 +322,13 @@ public class LogInController{
             //Hide this stage
             stage.hide();
         }catch(IOException ex){
-            LOG.log(Level.SEVERE, "An error in the logOut loader.", 
-                    ex.getMessage());
+            LOG.log(Level.SEVERE, ex.getMessage());
             Alert alert= new Alert(AlertType.ERROR, "A error have ocurred in the login.", 
                     ButtonType.OK);
             alert.showAndWait();
             txtFUser.requestFocus();
         }catch(Exception ex){
-            LOG.log(Level.SEVERE, "An error in the logOut loader.", 
-                    ex.getMessage());
+            LOG.log(Level.SEVERE, ex.getMessage());
             Alert alert= new Alert(AlertType.ERROR, "A error have ocurred in the login.", 
                     ButtonType.OK);
             alert.showAndWait();
