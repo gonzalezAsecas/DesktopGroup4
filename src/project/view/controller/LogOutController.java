@@ -126,7 +126,7 @@ public class LogOutController {
     }
     
     /**
-     * method para cerrar la aplicacion
+     * method 
      */
     
    
